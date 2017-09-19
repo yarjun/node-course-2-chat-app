@@ -47,10 +47,11 @@ socket.emit('newMessage',generatemessage('admin','welcome to chat app'));
 socket.broadcast.emit('newMessage',generatemessage('admin','new user joined'));
 
 
-socket.on('createMessage',function(message){
+socket.on('createMessage',function(message,callback){
   console.log('createMessage',message);
 
   io.emit('newMessage',generatemessage(message.from,message.text));
+  callback('this is from server side');
 });
 
 socket.on('disconnect',function(){

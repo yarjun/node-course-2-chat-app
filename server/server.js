@@ -41,9 +41,19 @@ io.on('connection',function(socket){
   //   text: 'server to client',
   //   createdAt: 123
   // });
-socket.on('disconnect',function(){
-  console.log('user disconnected');
+
+socket.emit('newMessage',{
+  from: 'admin',
+  text: 'Welcome to chat app',
+  createdAt: new Date().getTime() 
 });
+
+socket.broadcast.emit('newMessage',{
+  from: 'admin',
+  text: 'new user joined',
+  createdAt: new Date().getTime()
+});
+
 
 socket.on('createMessage',function(message){
   console.log('createMessage',message);
@@ -55,7 +65,9 @@ socket.on('createMessage',function(message){
   });
 });
 
-
+socket.on('disconnect',function(){
+  console.log('user disconnected');
+});
 
 });
 

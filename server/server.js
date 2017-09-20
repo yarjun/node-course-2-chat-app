@@ -3,7 +3,7 @@ const path = require('path');
 var app = express();
 const http = require('http');
 const socketIO = require('socket.io');
-const {generatemessage} = require('./utils/message');
+const {generatemessage,generateLocationmessage} = require('./utils/message');
 const publicpath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
 
@@ -36,12 +36,6 @@ app.use(express.static(publicpath));
 io.on('connection',function(socket){
   console.log('new user connected');
 
-  // socket.emit('newMessage',{
-  //   from: 'arjun@example.com',
-  //   text: 'server to client',
-  //   createdAt: 123
-  // });
-
 socket.emit('newMessage',generatemessage('admin','welcome to chat app'));
 
 socket.broadcast.emit('newMessage',generatemessage('admin','new user joined'));
@@ -52,6 +46,10 @@ socket.on('createMessage',function(message,callback){
 
   io.emit('newMessage',generatemessage(message.from,message.text));
   callback('this is from server side');
+});
+
+socket.on('createLocationMessage',function(coords){
+  io.emit('newLocationMessage',generateLocationmessage('admin',coords.latitude,coords.longitude));
 });
 
 socket.on('disconnect',function(){
